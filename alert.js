@@ -2,8 +2,8 @@ import WebSocket from "ws";
 import fetch from "node-fetch";
 import fs from "fs";
 
-const SYMBOL = "R_25_1S";
-const SYMBOL_TAG = "☕ V25 (1s) — R_25_1S";
+const SYMBOL = "1HZ25V";   // ✅ Correct Volatility 25 (1s)
+const SYMBOL_TAG = "☕ V25 (1s) — 1HZ25V";
 
 const M15 = 900;
 const M30 = 1800;
@@ -19,7 +19,6 @@ const TG_TOKEN = process.env.TG_BOT_TOKEN;
 const TG_CHAT = process.env.TG_CHAT_ID;
 const TRIGGER_SOURCE = process.env.TRIGGER_SOURCE;
 
-// ✅ Safety checks
 if (TRIGGER_SOURCE !== "cronjob") {
   console.log("⛔ Blocked:", TRIGGER_SOURCE);
   process.exit(0);
@@ -30,7 +29,6 @@ if (!TG_TOKEN || !TG_CHAT) {
   process.exit(1);
 }
 
-// ✅ Safe state loading
 let state = {
   trend: null,
   lastSignalCandle: null,
