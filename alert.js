@@ -2,7 +2,7 @@ import WebSocket from "ws";
 import fetch from "node-fetch";
 import fs from "fs";
 
-const SYMBOL = "R_25_1S"; // ✅ Volatility 25 (1s)
+const SYMBOL = "R_25_1S";
 const SYMBOL_TAG = "☕ V25 (1s) — R_25_1S";
 
 const M15 = 900;
@@ -19,9 +19,30 @@ const TG_TOKEN = process.env.TG_BOT_TOKEN;
 const TG_CHAT = process.env.TG_CHAT_ID;
 const TRIGGER_SOURCE = process.env.TRIGGER_SOURCE;
 
+// ✅ Safety checks
 if (TRIGGER_SOURCE !== "cronjob") {
   console.log("⛔ Blocked:", TRIGGER_SOURCE);
   process.exit(0);
+}
+
+if (!TG_TOKEN || !TG_CHAT) {
+  console.log("❌ Missing Telegram secrets");
+  process.exit(1);
+}
+
+// ✅ Safe state loading
+let state = {
+  trend: null,
+  lastSignalCandle: null,
+  lastFractalBreakCandle: null
+};
+
+try {
+  if (fs.existsSync("state.json")) {
+    state = JSON.parse(fs.readFileSync("state.json"));
+  }
+} catch (e) {
+  console.log("State file error, using default state.");
 }
 
 async function sendTelegram(message) {
@@ -43,6 +64,11 @@ async function getCandles(granularity) {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
 
+    const timeout = setTimeout(() => {
+      ws.terminate();
+      reject(new Error("WebSocket timeout"));
+    }, 15000);
+
     ws.on("open", () => {
       ws.send(JSON.stringify({
         ticks_history: SYMBOL,
@@ -58,17 +84,22 @@ async function getCandles(granularity) {
       const response = JSON.parse(data);
 
       if (response.error) {
+        clearTimeout(timeout);
         reject(new Error(response.error.message));
         ws.close();
       }
 
       if (response.candles) {
+        clearTimeout(timeout);
         resolve(response.candles);
         ws.close();
       }
     });
 
-    ws.on("error", (err) => reject(err));
+    ws.on("error", (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
   });
 }
 
@@ -82,7 +113,6 @@ function sma(data, length) {
 
 function calculateATR(candles, period) {
   let trs = [];
-
   for (let i = 1; i < candles.length; i++) {
     const high = parseFloat(candles[i].high);
     const low = parseFloat(candles[i].low);
@@ -127,8 +157,6 @@ function fractals(highs, lows) {
 (async () => {
   try {
 
-    const state = JSON.parse(fs.readFileSync("state.json"));
-
     const m15 = await getCandles(M15);
     const m30 = await getCandles(M30);
 
@@ -164,7 +192,6 @@ function fractals(highs, lows) {
     if (DEBUG) {
       console.log("Close:", closePrice);
       console.log("Trend:", newTrend);
-      console.log("Fractals:", lastUp, lastDown);
     }
 
     if (crossHappened && state.lastSignalCandle !== candleTime) {
@@ -172,9 +199,7 @@ function fractals(highs, lows) {
 `${SYMBOL_TAG}
 
 🔄 TREND CHANGE → ${newTrend}
-
-Price: ${closePrice}
-Waiting for M30 fractal break confirmation...`
+Price: ${closePrice}`
       );
       state.lastSignalCandle = candleTime;
     }
@@ -184,11 +209,12 @@ Waiting for M30 fractal break confirmation...`
     if (newTrend === "BUY" && lastUp && closePrice > lastUp) fractalBreak = "BUY";
     if (newTrend === "SELL" && lastDown && closePrice < lastDown) fractalBreak = "SELL";
 
-    function buildMessage(direction) {
+    if (fractalBreak && state.lastFractalBreakCandle !== candleTime) {
+
       let entry = closePrice;
       let structureStop, atrStop, finalStop, risk, tp;
 
-      if (direction === "BUY") {
+      if (fractalBreak === "BUY") {
         structureStop = lastDown;
         atrStop = entry - (atr * ATR_MULTIPLIER);
         finalStop = Math.max(structureStop, atrStop);
@@ -202,18 +228,17 @@ Waiting for M30 fractal break confirmation...`
         tp = entry - (risk * RISK_REWARD);
       }
 
-      return `${SYMBOL_TAG}
+      await sendTelegram(
+`${SYMBOL_TAG}
 
-✅ ${direction} CONFIRMED — Hybrid Stop
+✅ ${fractalBreak} CONFIRMED
 
 Entry: ${entry}
 Stop: ${finalStop.toFixed(3)}
 TP: ${tp.toFixed(3)}
-RR: 1 : ${RISK_REWARD}`;
-    }
+RR: 1 : ${RISK_REWARD}`
+      );
 
-    if (fractalBreak && state.lastFractalBreakCandle !== candleTime) {
-      await sendTelegram(buildMessage(fractalBreak));
       state.lastFractalBreakCandle = candleTime;
     }
 
@@ -221,7 +246,7 @@ RR: 1 : ${RISK_REWARD}`;
     fs.writeFileSync("state.json", JSON.stringify(state, null, 2));
 
   } catch (err) {
-    console.error("Error:", err.message);
+    console.error("❌ BOT ERROR:", err.message);
     process.exit(1);
   }
 })();
