@@ -225,6 +225,26 @@ Time: ${isoTime}`
       state.lastConfirmCandle = candleTime;
     }
 
+    // ✅ FULL DEBUG
+    if (DEBUG) {
+      console.log("════════ DEBUG ════════");
+      console.log("Symbol:", SYMBOL_NAME);
+      console.log("Time:", isoTime);
+      console.log("Close:", closePrice);
+      console.log("SMA4 Prev:", sma4[prev]);
+      console.log("SMA34 Prev:", sma34[prev]);
+      console.log("SMA4 Curr:", sma4[last]);
+      console.log("SMA34 Curr:", sma34[last]);
+      console.log("Cross Direction:", crossDirection);
+      console.log("Active Direction:", state.activeDirection);
+      console.log("Last M30 Up:", lastUp);
+      console.log("Last M30 Down:", lastDown);
+      console.log("Fractal Break:", fractalBreak);
+      console.log("Last Cross Candle:", state.lastCrossCandle);
+      console.log("Last Confirm Candle:", state.lastConfirmCandle);
+      console.log("═══════════════════════");
+    }
+
     fs.writeFileSync("state.json", JSON.stringify(state, null, 2));
 
   } catch (err) {
