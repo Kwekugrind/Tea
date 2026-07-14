@@ -151,6 +151,9 @@ function fractals(highs, lows) {
 (async () => {
   try {
 
+    // ✅ Ensure candle is finalized
+    await new Promise(resolve => setTimeout(resolve, 20000));
+
     const m15 = await getCandles(M15);
     const m30 = await getCandles(M30);
 
@@ -171,11 +174,12 @@ function fractals(highs, lows) {
 
     let crossDirection = null;
 
-    if (sma4[prev] < sma34[prev] && sma4[last] > sma34[last]) {
+    // ✅ Robust crossover detection
+    if (sma4[prev] <= sma34[prev] && sma4[last] > sma34[last]) {
       crossDirection = "BUY";
     }
 
-    if (sma4[prev] > sma34[prev] && sma4[last] < sma34[last]) {
+    if (sma4[prev] >= sma34[prev] && sma4[last] < sma34[last]) {
       crossDirection = "SELL";
     }
 
@@ -258,8 +262,6 @@ Time: ${isoTime}`
       console.log("Last M30 Up:", lastUp);
       console.log("Last M30 Down:", lastDown);
       console.log("Fractal Break:", fractalBreak);
-      console.log("Last Cross Candle:", state.lastCrossCandle);
-      console.log("Last Confirm Candle:", state.lastConfirmCandle);
       console.log("═══════════════════════");
     }
 
