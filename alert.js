@@ -171,7 +171,6 @@ function fractals(highs, lows) {
 
     let crossDirection = null;
 
-    // ✅ CROSS DETECTION
     if (sma4[prev] < sma34[prev] && sma4[last] > sma34[last]) {
       crossDirection = "BUY";
     }
@@ -180,9 +179,7 @@ function fractals(highs, lows) {
       crossDirection = "SELL";
     }
 
-    // ✅ HANDLE CROSS
     if (crossDirection && state.lastCrossCandle !== candleTime) {
-
       state.activeDirection = crossDirection;
       state.lastCrossCandle = candleTime;
 
@@ -206,15 +203,9 @@ Waiting for M30 fractal break confirmation...`
 
     let fractalBreak = null;
 
-    if (state.activeDirection === "BUY" && lastUp && closePrice > lastUp) {
-      fractalBreak = "BUY";
-    }
+    if (state.activeDirection === "BUY" && lastUp && closePrice > lastUp) fractalBreak = "BUY";
+    if (state.activeDirection === "SELL" && lastDown && closePrice < lastDown) fractalBreak = "SELL";
 
-    if (state.activeDirection === "SELL" && lastDown && closePrice < lastDown) {
-      fractalBreak = "SELL";
-    }
-
-    // ✅ HANDLE CONFIRMATION
     if (fractalBreak && state.lastConfirmCandle !== candleTime) {
 
       let entry = closePrice;
@@ -253,7 +244,6 @@ Time: ${isoTime}`
       state.lastConfirmCandle = candleTime;
     }
 
-    // ✅ FULL DEBUG
     if (DEBUG) {
       console.log("════════ DEBUG ════════");
       console.log("Symbol:", SYMBOL_NAME);
