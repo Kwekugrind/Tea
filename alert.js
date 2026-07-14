@@ -49,30 +49,58 @@ async function sendTelegram(message) {
   });
 }
 
-async function getCandles(granularity) {
-  return new Promise((resolve, reject) => {
-    const ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
+async function getCandles(granularity, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const candles = await new Promise((resolve, reject) => {
+        const ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
 
-    ws.on("open", () => {
-      ws.send(JSON.stringify({
-        ticks_history: SYMBOL,
-        adjust_start_time: 1,
-        count: CANDLES,
-        granularity,
-        end: "latest",
-        style: "candles"
-      }));
-    });
+        const timeout = setTimeout(() => {
+          ws.terminate();
+          reject(new Error("WebSocket timeout"));
+        }, 15000);
 
-    ws.on("message", (data) => {
-      const response = JSON.parse(data);
-      if (response.error) reject(new Error(response.error.message));
-      if (response.candles) resolve(response.candles);
-      ws.close();
-    });
+        ws.on("open", () => {
+          ws.send(JSON.stringify({
+            ticks_history: SYMBOL,
+            adjust_start_time: 1,
+            count: CANDLES,
+            granularity,
+            end: "latest",
+            style: "candles"
+          }));
+        });
 
-    ws.on("error", reject);
-  });
+        ws.on("message", (data) => {
+          const response = JSON.parse(data);
+
+          if (response.error) {
+            clearTimeout(timeout);
+            reject(new Error(response.error.message));
+            ws.close();
+          }
+
+          if (response.candles) {
+            clearTimeout(timeout);
+            resolve(response.candles);
+            ws.close();
+          }
+        });
+
+        ws.on("error", (err) => {
+          clearTimeout(timeout);
+          reject(err);
+        });
+      });
+
+      return candles;
+
+    } catch (err) {
+      console.log(`Attempt ${attempt} failed: ${err.message}`);
+      if (attempt === retries) throw err;
+      await new Promise(r => setTimeout(r, 2000));
+    }
+  }
 }
 
 function sma(data, length) {
