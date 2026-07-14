@@ -1,4 +1,4 @@
-name: Coffee Machine
+name: Tea Machine
 
 on:
   workflow_dispatch:
