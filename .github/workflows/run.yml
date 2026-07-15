@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: coffee-machine
+  group: tea-machine
   cancel-in-progress: false
 
 jobs:
