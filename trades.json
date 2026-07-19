@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "SELL",
+    "entry": 2560.835,
+    "stop": 2580.540423529412,
+    "tp": 2531.2768647058824,
+    "rr": 1.5,
+    "openTime": "2026-07-19T21:30:00.000Z",
+    "closeTime": null,
+    "result": null
+  }
+]
