@@ -253,7 +253,8 @@ Time: ${isoTime}`
       }
 
       const trade = {
-        repo: "Tea Machine",
+        id: `${SYMBOL}-${isoTime}`,   // ✅ UNIQUE ID
+        repo: "Tea Machine",          // change per repo
         symbol: SYMBOL,
         direction: fractalBreak,
         entry: entry,
