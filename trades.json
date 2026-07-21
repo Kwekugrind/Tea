@@ -9,7 +9,8 @@
     "rr": 1.5,
     "openTime": "2026-07-19T21:30:00.000Z",
     "closeTime": null,
-    "result": null
+    "result": null,
+    "warningSent": true
   },
   {
     "repo": "Tea Machine",
