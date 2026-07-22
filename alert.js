@@ -225,9 +225,11 @@ function fractals(highs, lows) {
         tp = entry - (risk * RISK_REWARD);
       }
 
-      await sendTelegram(
-`✅ ${SYMBOL_NAME} CONFIRMED
-
+     await sendTelegram(
+`══════════════════════
+${SYMBOL_NAME}
+══════════════════════
+✅ ${fractalBreak} CONFIRMED — Hybrid Stop
 Entry: ${entry}
 Stop: ${finalStop.toFixed(3)}
 TP: ${tp.toFixed(3)}
