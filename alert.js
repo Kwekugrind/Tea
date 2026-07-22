@@ -237,15 +237,14 @@ RR: 1 : ${RISK_REWARD}
 Time: ${isoTime}`
       );
 
-      // ✅ OMNISIGHT TRADE LOGGING (With Entry Guard)
+      // ✅ OMNISIGHT TRADE LOGGING (With Entry Guard and Dual Flags)
       let trades = fs.existsSync("trades.json")
         ? JSON.parse(fs.readFileSync("trades.json"))
         : [];
 
-      // Only add a new trade if NO trades are currently active (result is null)
-      const hasActiveTrade = trades.some(t => t.result === null);
+      const hasOpenTrade = trades.some(t => t.result === null);
 
-      if (!hasActiveTrade) {
+      if (!hasOpenTrade) {
         const trade = {
           id: `${SYMBOL}-${isoTime}`,
           repo: "Tea Machine",
@@ -258,7 +257,8 @@ Time: ${isoTime}`
           openTime: isoTime,
           closeTime: null,
           result: null,
-          warningSent: false
+          warningSentOmni: false, // For central 5m alerts
+          warningSentBot: false   // For local 15m backup alerts
         };
 
         trades.push(trade);
@@ -269,12 +269,12 @@ Time: ${isoTime}`
       state.lastConfirmCandle = candleTime;
     }
 
-    // ✅ MACD WARNING SYSTEM (URGENT FORMAT)
+    // ✅ MACD WARNING SYSTEM (Bot Reminder Version)
     let trades = fs.existsSync("trades.json")
       ? JSON.parse(fs.readFileSync("trades.json"))
       : [];
 
-    const openTrade = trades.find(t => t.result === null && !t.warningSent);
+    const openTrade = trades.find(t => t.result === null && t.warningSentBot !== true);
 
     if (openTrade) {
 
@@ -292,18 +292,19 @@ Time: ${isoTime}`
         await sendTelegram(`
 ⚠⚠⚠ CLOSE ${openTrade.direction} TRADE NOW ⚠⚠⚠
 
+[Bot Reminder]
 Repo: Tea Machine
 Symbol: ${SYMBOL_NAME}
 Direction: ${openTrade.direction}
 Entry: ${openTrade.entry}
 Current Price: ${currentPrice}
 
-MACD (M5) is ${macd < 0 ? "below" : "above"} zero.
+MACD (M5) crossed zero.
 
 EXIT IMMEDIATELY.
 `);
 
-        openTrade.warningSent = true;
+        openTrade.warningSentBot = true;
         fs.writeFileSync("trades.json", JSON.stringify(trades, null, 2));
       }
     }
