@@ -9,9 +9,9 @@
     "tp": 2628.2479911764704,
     "rr": 1.5,
     "openTime": "2026-07-22T22:30:00.000Z",
-    "closeTime": null,
-    "result": null,
+    "closeTime": "2026-07-22T23:30:00.000Z",
+    "result": "LOSS",
     "warningSentOmni": false,
-    "warningSentBot": false
+    "warningSentBot": true
   }
 ]
