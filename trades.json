@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "id": "R_25-2026-07-22T22:30:00.000Z",
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2612.429,
+    "stop": 2601.8830058823532,
+    "tp": 2628.2479911764704,
+    "rr": 1.5,
+    "openTime": "2026-07-22T22:30:00.000Z",
+    "closeTime": null,
+    "result": null,
+    "warningSentOmni": false,
+    "warningSentBot": false
+  }
+]
