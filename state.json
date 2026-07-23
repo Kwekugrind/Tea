@@ -1,6 +1,5 @@
 {
-  "activeDirection": "SELL",
-  "lastCrossCandle": 1784803500,
-  "lastConfirmCandle": 1784790000,
-  "lastProcessedEpoch": 1784805000
+  "waitingFor": null,
+  "setupEpoch": null,
+  "lastProcessedEpoch": null
 }
