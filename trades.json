@@ -13,5 +13,20 @@
     "result": "LOSS",
     "warningSentOmni": false,
     "warningSentBot": true
+  },
+  {
+    "id": "R_25-2026-07-23T07:00:00.000Z",
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2626.803,
+    "stop": 2608.479182352941,
+    "tp": 2654.2887264705887,
+    "rr": 1.5,
+    "openTime": "2026-07-23T07:00:00.000Z",
+    "closeTime": null,
+    "result": null,
+    "warningSentOmni": false,
+    "warningSentBot": false
   }
 ]
