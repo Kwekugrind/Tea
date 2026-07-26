@@ -1,5 +1,5 @@
 {
-  "waitingFor": "BUY",
-  "setupEpoch": 1785101100,
-  "lastProcessedEpoch": 1785101700
+  "waitingFor": "SELL",
+  "setupEpoch": 1785102000,
+  "lastProcessedEpoch": 1785102000
 }
