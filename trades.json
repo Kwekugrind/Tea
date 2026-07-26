@@ -28,5 +28,21 @@
     "openTime": "2026-07-24 14:10:00",
     "closeTime": "2026-07-25T17:55:13.146Z",
     "result": "WIN"
+  },
+  {
+    "id": "R_25-2026-07-26T03:55:00.000Z",
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2643.006,
+    "sl": 2614.441,
+    "tp1": 2685.8535,
+    "tp2": 2700.136,
+    "tp3": 2728.701,
+    "rr": 1.5,
+    "tp1Reached": false,
+    "openTime": "2026-07-26 03:55:00",
+    "closeTime": null,
+    "result": null
   }
 ]
