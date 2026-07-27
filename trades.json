@@ -107,7 +107,7 @@
     "tp3": 2749.2100000000005,
     "rr": 1.5,
     "tp1Reached": false,
-    "macdEarlyFlipEpoch": null,
+    "macdEarlyFlipEpoch": 1785162000,
     "openTime": "2026-07-27 12:40:00",
     "closeTime": null,
     "result": null
