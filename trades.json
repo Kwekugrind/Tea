@@ -182,5 +182,23 @@
     "openTime": "2026-07-29 06:05:00",
     "closeTime": "2026-07-29T08:30:16.882Z",
     "result": "LOSS"
+  },
+  {
+    "id": "R_25-2026-07-30T07:25:00.000Z",
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2718.254,
+    "sl": 2697.57,
+    "tp1": 2749.2799999999997,
+    "tp2": 2759.6219999999994,
+    "tp3": 2780.305999999999,
+    "rr": 1.5,
+    "tp1Reached": false,
+    "macdEarlyFlipEpoch": null,
+    "lastInProfit": null,
+    "openTime": "2026-07-30 07:25:00",
+    "closeTime": null,
+    "result": null
   }
 ]
