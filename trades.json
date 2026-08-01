@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": "R_25-2026-08-01T15:40:00.000Z",
+    "contractId": 7637706319,
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2792.217,
+    "sl": 2777.906,
+    "tp1": 2813.6835,
+    "tp2": 2820.8390000000004,
+    "tp3": 2835.1500000000005,
+    "h1OpenAtEntry": 2787.93,
+    "tp1Reached": false,
+    "macdEarlyFlipEpoch": null,
+    "lastInProfit": null,
+    "rr": 1.5,
+    "openTime": "2026-08-01 15:40:00",
+    "closeTime": null,
+    "result": null
+  }
+]
