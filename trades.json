@@ -76,7 +76,8 @@
     "lastInProfit": false,
     "rr": 1.5,
     "openTime": "2026-08-02 17:25:00",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-02T19:50:20.483Z",
+    "result": "LOSS",
+    "pnlUSD": -0.88
   }
 ]
