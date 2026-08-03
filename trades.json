@@ -120,7 +120,8 @@
     "peakProfit": 6.190384080225887,
     "rr": 1.5,
     "openTime": "2026-08-03 13:00:00",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-03T14:35:31.043Z",
+    "result": "LOSS",
+    "pnlUSD": -1.61
   }
 ]
