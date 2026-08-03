@@ -79,5 +79,26 @@
     "closeTime": "2026-08-02T19:50:20.483Z",
     "result": "LOSS",
     "pnlUSD": -0.88
+  },
+  {
+    "id": "R_25-2026-08-03T03:40:00.000Z",
+    "contractId": 7797078879,
+    "repo": "Tea Machine",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2789.23,
+    "sl": 2776.088,
+    "tp1": 2808.9429999999998,
+    "tp2": 2815.5139999999997,
+    "tp3": 2828.6559999999995,
+    "h1OpenAtEntry": 2783.394,
+    "tp1Reached": false,
+    "macdEarlyFlipEpoch": null,
+    "lastInProfit": null,
+    "peakProfit": null,
+    "rr": 1.5,
+    "openTime": "2026-08-03 03:40:00",
+    "closeTime": null,
+    "result": null
   }
 ]
