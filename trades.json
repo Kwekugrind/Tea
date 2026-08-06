@@ -143,5 +143,25 @@
     "openTime": "2026-08-06 04:30:00",
     "closeTime": "2026-08-06 07:20:14",
     "result": "WIN"
+  },
+  {
+    "id": "R_25-2026-08-06T07:55:00.000Z",
+    "contractId": 8192486359,
+    "repo": "Tea (V25 Demo)",
+    "symbol": "R_25",
+    "direction": "SELL",
+    "entry": 2588.225,
+    "sl": 2599.95,
+    "tp1": 2570.6375,
+    "tp2": 2564.775,
+    "tp3": 2553.05,
+    "h1OpenAtEntry": 2587.876,
+    "tp1Reached": false,
+    "macdEarlyFlipEpoch": null,
+    "peakProfit": null,
+    "rr": 1.5,
+    "openTime": "2026-08-06 07:55:00",
+    "closeTime": null,
+    "result": null
   }
 ]
