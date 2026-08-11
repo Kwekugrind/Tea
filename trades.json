@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "id": "R_25-2026-08-11T23:25:00.000Z",
+    "contractId": 8892763459,
+    "repo": "Tea (V25 Demo)",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2660.507,
+    "sl": 2654.4525714285714,
+    "tp1": 2700,
+    "tp2": 2725,
+    "tp3": 2750,
+    "h1OpenAtEntry": null,
+    "tp1Reached": false,
+    "peakProfit": null,
+    "rr": 1.5,
+    "openTime": "2026-08-11 23:25:00",
+    "closeTime": null,
+    "result": null
+  }
+]
