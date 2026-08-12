@@ -137,9 +137,14 @@ async function executeManualClose(result, reason) {
       try { 
         const closeRes = await closeContract(trade.contractId); 
         if (!closeRes || closeRes.error) {
-          const errDesc = closeRes?.error?.message || JSON.stringify(closeRes);
-          await sendTelegram(`⚠️ *${REPO_LABEL}* — Manual Close Warning\n\nFailed to close contract \`${trade.contractId}\` on Deriv: ${errDesc}. Retrying next scan.`);
-          continue; 
+          const errCode = closeRes.error?.code;
+          const errDesc = closeRes.error?.message || JSON.stringify(closeRes.error);
+          if (errCode === "ContractNotFound" || errDesc.includes("not found among your open positions")) {
+            serverPnl = -5.00; // Assume hard SL loss if stopped out on server
+          } else {
+            await sendTelegram(`⚠️ *${REPO_LABEL}* — Manual Close Warning\n\nFailed to close contract \`${trade.contractId}\` on Deriv: ${errDesc}. Retrying next scan.`);
+            continue; 
+          }
         }
         if (typeof closeRes.sell?.profit === 'number') {
           serverPnl = closeRes.sell.profit;
@@ -560,12 +565,16 @@ async function runScanMode() {
         try {
           const closeRes = await closeContract(openTrade.contractId);
           if (!closeRes || closeRes.error) {
-            const errDesc = closeRes?.error?.message || JSON.stringify(closeRes);
-            console.error(`⚠️ Failed to close contract on Deriv: ${errDesc}`);
-            await sendTelegram(`⚠️ *${REPO_LABEL}* — Close Warning\n\nFailed to close contract \`${openTrade.contractId}\` on Deriv: ${errDesc}. Retrying next scan.`);
-            return; // Abort local closure so it retries!
-          }
-          if (typeof closeRes.sell?.profit === 'number') {
+            const errCode = closeRes.error?.code;
+            const errDesc = closeRes.error?.message || JSON.stringify(closeRes.error);
+            if (errCode === "ContractNotFound" || errDesc.includes("not found among your open positions")) {
+              serverPnl = -5.00; // Reflect hard SL loss when stopped out on server
+            } else {
+              console.error(`⚠️ Failed to close contract on Deriv: ${errDesc}`);
+              await sendTelegram(`⚠️ *${REPO_LABEL}* — Close Warning\n\nFailed to close contract \`${openTrade.contractId}\` on Deriv: ${errDesc}. Retrying next scan.`);
+              return; // Abort local closure so it retries!
+            }
+          } else if (typeof closeRes.sell?.profit === 'number') {
             serverPnl = closeRes.sell.profit;
           }
         } catch (e) {
@@ -670,7 +679,7 @@ async function runScanMode() {
   // ── Signal Scan (Strict Phase A Fresh H1 Cross + Stateful Phase B TDI/CCI Engine) ──
   const candles = await fetchCandles(M5, 120);
   if (!candles || candles.length < 60) { console.log("Not enough M5 candles."); return; }
-  const i = candles.length - 1; // <--- UPDATED TO length - 1 (Real-time M5 evaluation)
+  const i = candles.length - 1; // Real-time M5 evaluation
   const currentCandleEpoch = candles[i].epoch;
   const closes = candles.map(c => parseFloat(c.close));
 
@@ -695,7 +704,7 @@ async function runScanMode() {
   const h1Candles = await fetchCandles(H1, 100);
   let h1Dir = null, h1Epoch = null, h1FreshCross = false;
   if (h1Candles && h1Candles.length >= 52) {
-    const h1Closes = h1Candles.map(c => parseFloat(c.close)), h1ci = h1Candles.length - 1; // <--- UPDATED TO length - 1 (Real-time H1 evaluation)
+    const h1Closes = h1Candles.map(c => parseFloat(c.close)), h1ci = h1Candles.length - 1; // Real-time H1 evaluation
     const smaFast1h = sma(h1Closes, 2), smaSlow1h = sma(h1Closes, 50);
     if (smaFast1h[h1ci] != null && smaSlow1h[h1ci] != null && smaFast1h[h1ci-1] != null && smaSlow1h[h1ci-1] != null) {
       if (smaFast1h[h1ci] > smaSlow1h[h1ci]) h1Dir = "BUY";
@@ -705,7 +714,7 @@ async function runScanMode() {
       const crossedDown = (smaFast1h[h1ci-1] >= smaSlow1h[h1ci-1]) && (smaFast1h[h1ci] < smaSlow1h[h1ci]);
       if (crossedUp || crossedDown) h1FreshCross = true;
     }
-    h1Epoch = h1Candles[h1Candles.length - 1].epoch; // <--- UPDATED TO length - 1
+    h1Epoch = h1Candles[h1Candles.length - 1].epoch;
   }
 
   // Evaluate M15 Trend Direction (MACD 3, 50, 1 signal line vs 0)
@@ -714,7 +723,7 @@ async function runScanMode() {
   if (m15Candles && m15Candles.length >= 60) {
     const m15Closes = m15Candles.map(c => parseFloat(c.close));
     const m15Macd = calculateMACD(m15Closes, 3, 50, 1);
-    const m15si = m15Macd.signalLine.length - 1; // <--- UPDATED TO length - 1 (Real-time M15 evaluation)
+    const m15si = m15Macd.signalLine.length - 1; // Real-time M15 evaluation
     if (m15Macd.signalLine[m15si] != null) {
       if (m15Macd.signalLine[m15si] > 0) m15Dir = "BUY";
       else if (m15Macd.signalLine[m15si] < 0) m15Dir = "SELL";
