@@ -18,10 +18,10 @@ import fs from "fs";
 // const SYMBOL = "1HZ75V"; const SYMBOL_NAME = "Volatility 75 (1s) Index"; const REPO_LABEL = "Coffee (V75-1s Demo)"; const MULTIPLIER = 50; const COMMISSION_USD = 0.15;
 
 // --- 5. Milk (Demo) ---
-// const SYMBOL = "R_100"; const SYMBOL_NAME = "Volatility 100 Index"; const REPO_LABEL = "Milk (V100 Demo)"; const MULTIPLIER = 40; const COMMISSION_USD = 0.15;
+const SYMBOL = "R_100"; const SYMBOL_NAME = "Volatility 100 Index"; const REPO_LABEL = "Milk (V100 Demo)"; const MULTIPLIER = 40; const COMMISSION_USD = 0.15;
 
 // --- 6. Tea (Demo) ---
-const SYMBOL = "R_25"; const SYMBOL_NAME = "Volatility 25 Index"; const REPO_LABEL = "Tea (V25 Demo)"; const MULTIPLIER = 160; const COMMISSION_USD = 0.15;
+// const SYMBOL = "R_25"; const SYMBOL_NAME = "Volatility 25 Index"; const REPO_LABEL = "Tea (V25 Demo)"; const MULTIPLIER = 160; const COMMISSION_USD = 0.15;
 
 // --- 7. Ice Cream Machine (Demo) ---
 // const SYMBOL = "1HZ100V"; const SYMBOL_NAME = "Volatility 100 (1s) Index"; const REPO_LABEL = "Ice Cream Machine"; const MULTIPLIER = 40; const COMMISSION_USD = 0.15;
@@ -169,7 +169,7 @@ async function executeManualClose(result, reason) {
   }
 }
 
-let state = { waitingFor: null, setupEpoch: null, lastProcessedEpoch: null, lastTgUpdateId: 0, h1TrendEpoch: null, phaseATriggeredEpoch: null, phaseCTriggeredEpoch: null, activeEntryType: null, anticipatedTrend: null, pendingPullback: null, pullbackEpoch: null, pullbackTrigger: null, rsiLowerBreakSeen: false, rsiUpperBreakSeen: false, h1m15WasAligned: false };
+let state = { waitingFor: null, setupEpoch: null, lastProcessedEpoch: null, lastTgUpdateId: 0, h1TrendEpoch: null, phaseATriggeredEpoch: null, phaseCTriggeredEpoch: null, phaseDTriggeredEpoch: null, activeEntryType: null, anticipatedTrend: null, pendingPullback: null, pullbackEpoch: null, pullbackTrigger: null, rsiLowerBreakSeen: false, rsiUpperBreakSeen: false, h1m15WasAligned: false };
 try {
   const s = JSON.parse(fs.readFileSync("state.json"));
   state = {
@@ -180,6 +180,7 @@ try {
     h1TrendEpoch: s.h1TrendEpoch ?? null,
     phaseATriggeredEpoch: s.phaseATriggeredEpoch ?? null,
     phaseCTriggeredEpoch: s.phaseCTriggeredEpoch ?? null,
+    phaseDTriggeredEpoch: s.phaseDTriggeredEpoch ?? null,
     activeEntryType: s.activeEntryType ?? null,
     anticipatedTrend: s.anticipatedTrend ?? null,
     pendingPullback: s.pendingPullback ?? null,
@@ -791,6 +792,31 @@ async function runScanMode() {
     }
   }
 
+  // ── PHASE D: SHALLOW PULLBACK (TDI Outer Band + MBL Cross + CCI Zero Cross) ──
+  if (!m5Ready && h1Dir && m15Dir && (h1Dir === m15Dir) && state.phaseDTriggeredEpoch !== currentCandleEpoch) {
+    const mblPrev = tdi.middle[i-1], mblCurr = tdi.middle[i];
+    const rsiPrev = rsi[i-1], rsiCurr = rsi[i];
+    const rawTdiCrossUp = (rsiPrev <= mblPrev) && (rsiCurr > mblCurr);
+    const rawTdiCrossDown = (rsiPrev >= mblPrev) && (rsiCurr < mblCurr);
+    
+    const tdiCrossUp = rawTdiCrossUp && state.rsiLowerBreakSeen;
+    const tdiCrossDown = rawTdiCrossDown && state.rsiUpperBreakSeen;
+
+    if (tdiCrossUp) state.rsiLowerBreakSeen = false;
+    if (tdiCrossDown) state.rsiUpperBreakSeen = false;
+
+    const cciZeroCrossUp = (cci[i-1] <= 0) && (cci[i] > 0);
+    const cciZeroCrossDown = (cci[i-1] >= 0) && (cci[i] < 0);
+
+    if (h1Dir === "BUY" && tdiCrossUp && cciZeroCrossUp) {
+      m5Ready = true;
+      entryType = 'PHASE_D';
+    } else if (h1Dir === "SELL" && tdiCrossDown && cciZeroCrossDown) {
+      m5Ready = true;
+      entryType = 'PHASE_D';
+    }
+  }
+
   // ── PHASE B: STATEFUL CROSS-CONFIRMATION ENGINE (Pullbacks / Re-entries) ──
   if (!m5Ready && h1Dir && m15Dir && h1Dir === m15Dir) {
     // 1. Check Setup Expiry (35 bars)
@@ -918,9 +944,9 @@ async function runScanMode() {
   const h4Bearish = parseFloat(h4Candle.close) < parseFloat(h4Candle.open);
   const d1Ctx = await getD1Context();
 
-  const bypassH4ForPhaseAOrC = (state.activeEntryType === 'PHASE_A' || state.activeEntryType === 'PHASE_C');
-  const buySignal = state.waitingFor === "BUY" && (bypassH4ForPhaseAOrC || h4Bullish);
-  const sellSignal = state.waitingFor === "SELL" && (bypassH4ForPhaseA || h4Bearish);
+  const bypassH4ForPhaseAOrCOrD = (state.activeEntryType === 'PHASE_A' || state.activeEntryType === 'PHASE_C' || state.activeEntryType === 'PHASE_D');
+  const buySignal = state.waitingFor === "BUY" && (bypassH4ForPhaseAOrCOrD || h4Bullish);
+  const sellSignal = state.waitingFor === "SELL" && (bypassH4ForPhaseAOrCOrD || h4Bearish);
 
   let signalTriggered = false, direction = "", entry, sl, risk, tp1, tp2, tp3;
   if (buySignal) {
@@ -986,6 +1012,9 @@ async function runScanMode() {
     }
     if (state.activeEntryType === 'PHASE_C') {
       state.phaseCTriggeredEpoch = currentCandleEpoch; // Lock Phase C so it only triggers once per realignment event
+    }
+    if (state.activeEntryType === 'PHASE_D') {
+      state.phaseDTriggeredEpoch = currentCandleEpoch; // Lock Phase D so it only triggers once per shallow pullback event
     }
     state.waitingFor = null;
     state.setupEpoch = null;
