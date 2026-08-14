@@ -114,6 +114,7 @@
     "rr": 1.5,
     "openTime": "2026-08-14 23:20:00",
     "closeTime": null,
-    "result": null
+    "result": null,
+    "exitTrigger": "TDI"
   }
 ]
