@@ -19,5 +19,25 @@
     "closeTime": "2026-08-15 16:10:35",
     "result": "WIN",
     "breakevenSet": true
+  },
+  {
+    "id": "R_25-2026-08-15T18:25:00.000Z",
+    "contractId": 9346018739,
+    "repo": "Tea (V25 Demo)",
+    "symbol": "R_25",
+    "direction": "BUY",
+    "entry": 2661.29,
+    "sl": 2654.623,
+    "tp1": 2700,
+    "tp2": 2725,
+    "tp3": 2750,
+    "h1OpenAtEntry": null,
+    "tp1Reached": false,
+    "peakProfit": null,
+    "rr": 1.5,
+    "entryType": "PHASE_C",
+    "openTime": "2026-08-15 18:25:00",
+    "closeTime": null,
+    "result": null
   }
 ]
