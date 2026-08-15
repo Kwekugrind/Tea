@@ -136,6 +136,7 @@
     "entryType": "PHASE_C",
     "openTime": "2026-08-15 10:55:00",
     "closeTime": null,
-    "result": null
+    "result": null,
+    "breakevenSet": true
   }
 ]
