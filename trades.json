@@ -390,5 +390,28 @@
     "closeTime": "2026-08-19 23:06:16",
     "result": "LOSS",
     "resultSource": "estimated_fallback"
+  },
+  {
+    "id": "R_25-2026-08-19T23:35:00.000Z",
+    "contractId": 9867768899,
+    "pending": false,
+    "repo": "Tea (V25 Demo)",
+    "symbol": "R_25",
+    "direction": "SELL",
+    "entry": 2599.569,
+    "sl": 2615.3288870625,
+    "tp1": 2550,
+    "tp2": 2525,
+    "tp3": 2500,
+    "h1OpenAtEntry": null,
+    "tp1Reached": false,
+    "breakevenSet": false,
+    "peakProfit": null,
+    "rr": 1.5,
+    "entryType": "PHASE_B",
+    "psarAligned": false,
+    "openTime": "2026-08-19 23:35:00",
+    "closeTime": null,
+    "result": null
   }
 ]
