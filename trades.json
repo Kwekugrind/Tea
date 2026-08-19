@@ -352,7 +352,7 @@
     "symbol": "R_25",
     "direction": "SELL",
     "entry": 2609.333,
-    "sl": 2569.1208890971725,
+    "sl": 2563.995,
     "tp1": 2550,
     "tp2": 2525,
     "tp3": 2500,
@@ -363,8 +363,8 @@
     "rr": 1.5,
     "entryType": "PHASE_B",
     "openTime": "2026-08-19 06:10:00",
-    "closeTime": null,
-    "result": null,
+    "closeTime": "2026-08-19 17:02:10",
+    "result": "LOSS",
     "psarAligned": true
   }
 ]
