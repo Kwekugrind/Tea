@@ -399,7 +399,7 @@
     "symbol": "R_25",
     "direction": "SELL",
     "entry": 2599.569,
-    "sl": 2615.3288870625,
+    "sl": 2609.085,
     "tp1": 2550,
     "tp2": 2525,
     "tp3": 2500,
@@ -409,7 +409,7 @@
     "peakProfit": null,
     "rr": 1.5,
     "entryType": "PHASE_B",
-    "psarAligned": false,
+    "psarAligned": true,
     "openTime": "2026-08-19 23:35:00",
     "closeTime": null,
     "result": null
