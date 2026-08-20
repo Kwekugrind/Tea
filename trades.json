@@ -447,7 +447,7 @@
     "symbol": "R_25",
     "direction": "BUY",
     "entry": 2622.054,
-    "sl": 2617.0091768827456,
+    "sl": 2617.2072333450906,
     "tp1": 2650,
     "tp2": 2675,
     "tp3": 2700,
@@ -459,7 +459,8 @@
     "entryType": "PHASE_B_NO_PRIOR_A",
     "psarAligned": true,
     "openTime": "2026-08-20 06:45:00",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-20 07:46:59",
+    "result": "LOSS",
+    "resultSource": "estimated_fallback"
   }
 ]
