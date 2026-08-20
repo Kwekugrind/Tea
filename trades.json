@@ -21,8 +21,9 @@
     "brokerSlAmount": 5,
     "profitLockPhase": false,
     "openTime": "2026-08-20 16:58:13",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-20 19:47:15",
+    "result": "LOSS",
+    "resultSource": "estimated_fallback"
   },
   {
     "id": "R_25-2026-08-20T19:26:18.075Z",
@@ -46,8 +47,9 @@
     "brokerSlAmount": 5,
     "profitLockPhase": false,
     "openTime": "2026-08-20 14:36:36",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-20 19:47:17",
+    "result": "LOSS",
+    "resultSource": "estimated_fallback"
   },
   {
     "id": "R_25-2026-08-20T19:26:18.252Z",
@@ -71,7 +73,8 @@
     "brokerSlAmount": 5,
     "profitLockPhase": false,
     "openTime": "2026-08-20 16:01:40",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-20 19:48:06",
+    "result": "LOSS",
+    "resultSource": "estimated_fallback"
   }
 ]
