@@ -471,7 +471,7 @@
     "symbol": "R_25",
     "direction": "BUY",
     "entry": 2620.913,
-    "sl": 2605.0237149375002,
+    "sl": 2613.631,
     "tp1": 2650,
     "tp2": 2675,
     "tp3": 2700,
@@ -481,7 +481,7 @@
     "peakProfit": null,
     "rr": 1.5,
     "entryType": "PHASE_B_NO_PRIOR_A",
-    "psarAligned": false,
+    "psarAligned": true,
     "openTime": "2026-08-20 08:40:00",
     "closeTime": null,
     "result": null
