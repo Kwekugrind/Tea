@@ -174,7 +174,7 @@
     "rr": 1.5,
     "entryType": "PHASE_B_NO_PRIOR_A",
     "psarAligned": true,
-    "brokerSlAmount": 5,
+    "brokerSlAmount": 3.54,
     "profitLockPhase": false,
     "openTime": "2026-08-21 13:10:00",
     "closeTime": null,
