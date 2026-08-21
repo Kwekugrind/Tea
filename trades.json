@@ -125,7 +125,8 @@
     "brokerSlAmount": 2.58,
     "profitLockPhase": false,
     "openTime": "2026-08-21 02:15:00",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-21 03:33:34",
+    "result": "LOSS",
+    "resultSource": "server_history_verified"
   }
 ]
