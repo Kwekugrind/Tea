@@ -280,7 +280,8 @@
     "psarAligned": true,
     "brokerSlAmount": 5,
     "openTime": "2026-08-22 03:50:00",
-    "closeTime": null,
-    "result": null
+    "closeTime": "2026-08-22 05:42:59",
+    "result": "LOSS",
+    "resultSource": "estimated_fallback"
   }
 ]
